@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Manage Subjects</h2>
+
+{% if active_semester %}
+<div style="background-color: #e8f5e8; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+    <h3>Active Semester: {{ active_semester.name }}</h3>
+    <p>You can only add subjects to the active semester.</p>
+</div>
+
+<div style="margin-bottom: 20px;">
+    <h3>Add New Subject</h3>
+    <form method="POST" style="display: flex; gap: 10px; align-items: end;">
+        <input type="hidden" name="action" value="add_subject">
+        <div class="form-group">
+            <label for="subject_name">Subject Name:</label>
+            <input type="text" name="subject_name" id="subject_name" required placeholder="Enter subject name">
+        </div>
+        <input type="submit" value="Add Subject" style="background-color: #44aa44; color: white; border: none; padding: 10px 20px; cursor: pointer;">
+    </form>
+</div>
+
+{% if subjects %}
+<h3>Current Subjects ({{ subjects|length }})</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Subject Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for subject in subjects %}
+        <tr>
+            <td>{{ subject.name }}</td>
+            <td>
+                <form method="POST" style="display: inline;">
+                    <input type="hidden" name="action" value="delete_subject">
+                    <input type="hidden" name="subject_id" value="{{ subject.id }}">
+                    <input type="submit" value="Delete" style="background-color: #ff4444; color: white; border: none; padding: 5px 10px; cursor: pointer;" 
+                           onclick="return confirm('Are you sure you want to delete this subject? This will also delete all attendance records for this subject.')">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p style="margin-top: 20px; font-style: italic; color: #666;">
+    <strong>Note:</strong> Deleting a subject will also remove all attendance records for that subject.
+</p>
+{% else %}
+<p style="color: #666; font-style: italic;">No subjects added yet for this semester. Add your first subject above.</p>
+{% endif %}
+
+{% else %}
+<div style="background-color: #fff3cd; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+    <h3>⚠️ No Active Semester</h3>
+    <p>Please <a href="{{ url_for('attendance.manage_semesters') }}">create and activate a semester</a> first to add subjects.</p>
+</div>
+{% endif %}
+{% endblock %} 
