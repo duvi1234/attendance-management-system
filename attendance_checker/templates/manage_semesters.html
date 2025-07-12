@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Manage Semesters</h2>
+
+<div style="margin-bottom: 20px;">
+    <h3>Add New Semester</h3>
+    <form method="POST" style="display: flex; gap: 10px; align-items: end;">
+        <input type="hidden" name="action" value="add_semester">
+        <div class="form-group">
+            <label for="semester_name">Semester Name:</label>
+            <input type="text" name="semester_name" id="semester_name" required placeholder="e.g., Semester 1, Semester 2">
+        </div>
+        <input type="submit" value="Add Semester" style="background-color: #44aa44; color: white; border: none; padding: 10px 20px; cursor: pointer;">
+    </form>
+</div>
+
+{% if semesters %}
+<h3>Current Semesters ({{ semesters|length }})</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Semester Name</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for semester in semesters %}
+        <tr>
+            <td>{{ semester.name }}</td>
+            <td>
+                {% if semester.is_active %}
+                    <span style="color: green; font-weight: bold;">Active</span>
+                {% else %}
+                    <span style="color: #666;">Inactive</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if not semester.is_active %}
+                    <form method="POST" style="display: inline;">
+                        <input type="hidden" name="action" value="activate_semester">
+                        <input type="hidden" name="semester_id" value="{{ semester.id }}">
+                        <input type="submit" value="Activate" style="background-color: #44aa44; color: white; border: none; padding: 5px 10px; cursor: pointer;">
+                    </form>
+                {% endif %}
+                
+                <form method="POST" style="display: inline;">
+                    <input type="hidden" name="action" value="delete_semester">
+                    <input type="hidden" name="semester_id" value="{{ semester.id }}">
+                    <input type="submit" value="Delete" style="background-color: #ff4444; color: white; border: none; padding: 5px 10px; cursor: pointer;" 
+                           onclick="return confirm('Are you sure you want to delete this semester? This will also delete all subjects and attendance records for this semester.')">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p style="margin-top: 20px; font-style: italic; color: #666;">
+    <strong>Note:</strong> 
+    <ul>
+        <li>Only one semester can be active at a time</li>
+        <li>You can only add subjects to the active semester</li>
+        <li>Deleting a semester will remove all its subjects and attendance records</li>
+    </ul>
+</p>
+{% else %}
+<p style="color: #666; font-style: italic;">No semesters added yet. Add your first semester above.</p>
+{% endif %}
+{% endblock %} 

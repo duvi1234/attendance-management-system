@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Export Ineligible Students Attendance</h2>
+
+<div class="status-indicator status-warning">
+    <h3>⚠️ Export Options</h3>
+    <p>Choose how you want to export ineligible students (attendance below 75%).</p>
+</div>
+
+<div class="dashboard-controls">
+    <h3>Select Export Type:</h3>
+    
+    <div style="margin-bottom: 20px;">
+        <h4>Option 1: Overall Attendance</h4>
+        <p>Export all ineligible students with complete semester and subject breakdown.</p>
+        <a href="{{ url_for('attendance.export_ineligible', export_type='overall') }}" class="btn btn-primary">
+            📊 Export Overall Ineligible Students
+        </a>
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+        <h4>Option 2: Subject-Specific Attendance</h4>
+        <p>Export ineligible students for a specific subject only.</p>
+        
+        <form method="GET" action="{{ url_for('attendance.export_ineligible') }}" style="margin-top: 10px;">
+            <input type="hidden" name="export_type" value="subject">
+            
+            <div class="form-group">
+                <label for="subject_id">Select Subject:</label>
+                <select name="subject_id" id="subject_id" required style="width: 100%; margin-bottom: 10px;">
+                    <option value="">Choose a subject...</option>
+                    {% for subject in subjects %}
+                    <option value="{{ subject.id }}">{{ subject.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-warning">
+                📋 Export Subject-Specific Ineligible Students
+            </button>
+        </form>
+    </div>
+</div>
+
+<div style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 8px;">
+    <h4>📋 Export Details:</h4>
+    
+    <div style="margin-bottom: 15px;">
+        <h5>Overall Export Includes:</h5>
+        <ul>
+            <li>Student basic information (Roll No, Registration No, Name)</li>
+            <li>Overall attendance percentage</li>
+            <li>Semester-wise breakdown</li>
+            <li>Subject-wise detailed breakdown</li>
+            <li>All students with attendance below 75%</li>
+        </ul>
+    </div>
+    
+    <div>
+        <h5>Subject-Specific Export Includes:</h5>
+        <ul>
+            <li>Student basic information</li>
+            <li>Selected subject attendance details</li>
+            <li>Total classes and attended classes for that subject</li>
+            <li>Attendance percentage for that specific subject</li>
+            <li>Only students with attendance below 75% in that subject</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+</style>
+{% endblock %} 
