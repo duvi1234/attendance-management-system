@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Percentage Checker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body{% block body_class %}{% endblock %}>
+
+    <div class="container">
+
+        <!-- Header -->
+        <h1>🎓 Attendance Management System</h1>
+
+        <!-- Navigation (show only if logged in AND not on login page) -->
+        {% if session.advisor_id and not is_login_page %}
+            <nav>
+                <a href="{{ url_for('attendance.dashboard') }}">📊 Dashboard</a>
+                <a href="{{ url_for('attendance.manage_semesters') }}">📚 Manage Semesters</a>
+                <a href="{{ url_for('attendance.manage_subjects') }}">📖 Manage Subjects</a>
+                <a href="{{ url_for('attendance.update_attendance') }}">✏️ Update Attendance</a>
+                <a href="{{ url_for('attendance.export_all') }}">📥 Export All</a>
+                <a href="{{ url_for('attendance.export_ineligible') }}">⚠️ Export Ineligible</a>
+                <a href="{{ url_for('auth.logout') }}">🚪 Logout</a>
+            </nav>
+        {% endif %}
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <!-- Main Content -->
+        {% block content %}{% endblock %}
+
+        {% if not is_login_page %}
+        <div style="margin-top: 40px; text-align: center; color: #888; font-size: 1rem; letter-spacing: 0.5px;">
+            Made by <strong>Durga Devi R</strong>, CSE(AI&amp;ML) 2023-2027 <span style="font-size:1.2em; vertical-align:middle;">💙</span>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+    // Make .table-container scrollable with left/right arrow keys
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.table-container').forEach(function(container) {
+            container.setAttribute('tabindex', '0');
+            container.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowRight') {
+                    container.scrollLeft += 50;
+                    e.preventDefault();
+                } else if (e.key === 'ArrowLeft') {
+                    container.scrollLeft -= 50;
+                    e.preventDefault();
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
